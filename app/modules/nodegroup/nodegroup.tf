@@ -41,14 +41,14 @@ data "aws_ami" "eks-worker" {
 resource "aws_launch_template" "node" {
   name_prefix = local.cluster_nm
 
-  block_device_mappings {
-    device_name = "/dev/xvda"
+  # block_device_mappings {
+  #   device_name = "/dev/xvda"
 
-    ebs {
-      volume_size = 30
-      volume_type = "gp2"
-    }
-  }
+  #   ebs {
+  #     volume_size = 30
+  #     volume_type = "gp2"
+  #   }
+  # }
 
   credit_specification {
     cpu_credits = "standard"
@@ -101,10 +101,10 @@ resource "aws_eks_node_group" "node" {
   # capacity_type = "ON_DEMAND"
   # disk_size = 30
   
-  remote_access {
-    ec2_ssh_key = var.key_name
-    source_security_group_ids = [var.bastion_security_id]
-  }
+  # remote_access {
+  #   ec2_ssh_key = var.key_name
+  #   source_security_group_ids = [var.bastion_security_id]
+  # }
 
   update_config {
     max_unavailable = var.min_size
