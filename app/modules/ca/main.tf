@@ -77,20 +77,40 @@ resource "aws_iam_role_policy" "ca" {
 ###########################################################################
 # Cluster Autoscaler 생성
 ###########################################################################
-data "template_file" "ca" {
-  template = file("${path.module}/manifests/cluster-autoscaler-autodiscover.yaml")
+# data "template_file" "ca" {
+#   template = file("${path.module}/manifests/cluster-autoscaler-autodiscover.yaml")
 
-  vars = {
+#   vars = {
+#     cluster_name = var.cluster_name
+#     cluster_role_arn = module.ca.iam_role_arn
+#   }
+# }
+
+# data "kubectl_file_documents" "ca" {
+#   content = data.template_file.ca.rendered
+# }
+
+# resource "kubectl_manifest" "ca" {
+#   count = var.create_role ? length(data.kubectl_file_documents.ca.documents) : 0
+#   yaml_body = element(data.kubectl_file_documents.ca.documents, count.index)
+# }
+data "kubectl_path_documents" "ca" {
+  pattern = "${path.module}/manifests/*.yaml"
+
+    vars = {
     cluster_name = var.cluster_name
     cluster_role_arn = module.ca.iam_role_arn
   }
 }
 
-data "kubectl_file_documents" "ca" {
-  content = data.template_file.ca.rendered
-}
-
 resource "kubectl_manifest" "ca" {
-  count = var.create_role ? length(data.kubectl_file_documents.ca.documents) : 0
-  yaml_body = element(data.kubectl_file_documents.ca.documents, count.index)
+  count = length(
+    flatten(
+      toset([
+        for f in fileset(".", data.kubectl_path_documents.ca.pattern) : split("\n---\n", file(f))
+        ]
+      )
+    )
+  )
+  yaml_body = element(data.kubectl_path_documents.ca.documents, count.index)
 }

@@ -30,8 +30,8 @@ data "http" "iam_policy" {
 # 다운로드받은 정책을 AWS IAM Role에 Attatch
 ########################################################################
 resource "aws_iam_role_policy" "controller" {
-  name_prefix = "AWSLoadBalancerControllerWithHelmIAMPolicy"
-  policy = data.http.iam_policy.body
+  name_prefix = "AWSLoadBalancerControllerWithHelmIAMPolicyHjhco"
+  policy = data.http.iam_policy.response_body
   role = aws_iam_role.this[0].name
 }
 

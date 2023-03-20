@@ -11,7 +11,7 @@ variable "svr_nm" {
 ###############################################################
 variable "autoscaler_mode" {
   type = string
-  default = "karpenter"
+  default = "ca"
 }
 
 ###############################################################

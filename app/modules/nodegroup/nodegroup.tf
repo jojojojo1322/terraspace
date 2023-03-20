@@ -41,14 +41,14 @@ data "aws_ami" "eks-worker" {
 resource "aws_launch_template" "node" {
   name_prefix = local.cluster_nm
 
-  # block_device_mappings {
-  #   device_name = "/dev/xvda"
+  block_device_mappings {
+    device_name = "/dev/xvda"
 
-  #   ebs {
-  #     volume_size = 30
-  #     volume_type = "gp2"
-  #   }
-  # }
+    ebs {
+      volume_size = 30
+      volume_type = "gp2"
+    }
+  }
 
   credit_specification {
     cpu_credits = "standard"
@@ -59,6 +59,7 @@ resource "aws_launch_template" "node" {
   # instance_type = var.instance_type
   key_name = var.key_name
   vpc_security_group_ids = [aws_security_group.node.id]
+  # source_security_group_ids = [var.bastion_security_id]
 
   user_data = base64encode(templatefile("${path.module}/template/userdata.tpl", local.kubeconfig_data))
 
@@ -89,22 +90,26 @@ resource "aws_eks_node_group" "node" {
     max_size = var.max_size
     min_size = var.min_size
   }
+
+  // Worker Settings
+  instance_types = [var.instance_type]
+  disk_size      = 30
   
   # 1. used template
-  launch_template {
-    name = aws_launch_template.node.name
-    version = aws_launch_template.node.latest_version
-  }
+  # launch_template {
+  #   name = aws_launch_template.node.name
+  #   version = aws_launch_template.node.latest_version
+  # }
   # 2. used managed ami
   # ami_type = "AL2_x86_64"
   # instance_types = [var.instance_type]
   # capacity_type = "ON_DEMAND"
   # disk_size = 30
   
-  # remote_access {
-  #   ec2_ssh_key = var.key_name
-  #   source_security_group_ids = [var.bastion_security_id]
-  # }
+  remote_access {
+    ec2_ssh_key = var.key_name
+    source_security_group_ids = [var.bastion_security_id]
+  }
 
   update_config {
     max_unavailable = var.min_size

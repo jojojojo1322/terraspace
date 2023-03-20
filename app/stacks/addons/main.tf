@@ -81,32 +81,32 @@ module "karpenter" {
 ###################################################################################
 # Grafana Stack 생성
 ###################################################################################
-module "monitoring" {
-  source = "../../modules/grafana"
+# module "monitoring" {
+#   source = "../../modules/grafana"
 
-  # 서비스 이름
-  svr_nm = var.svr_nm
-  # loki index 이름
-  loki_index = var.loki_index
+#   # 서비스 이름
+#   svr_nm = var.svr_nm
+#   # loki index 이름
+#   loki_index = var.loki_index
   
-  # 클러스터 이름
-  cluster_name = var.cluster_name
-  cluster_oidc_provider = var.cluster_oidc_issuer
-  cluster_oidc_arn = var.cluster_oidc_arn
+#   # 클러스터 이름
+#   cluster_name = var.cluster_name
+#   cluster_oidc_provider = var.cluster_oidc_issuer
+#   cluster_oidc_arn = var.cluster_oidc_arn
 
-  # kms key arn
-  kms_key_arn = var.kms_key_arn
+#   # kms key arn
+#   kms_key_arn = var.kms_key_arn
   
-  # helm chart role 정보
-  metrics_server_iam_role_name = "metrics-server-${var.cluster_name}"
-  prometheus_iam_role_name = "prometheus-${var.cluster_name}"
-  loki_iam_role_name = "loki-${var.cluster_name}"
-  grafana_iam_role_name = "grafana-${var.cluster_name}"
+#   # helm chart role 정보
+#   metrics_server_iam_role_name = "metrics-server-${var.cluster_name}"
+#   prometheus_iam_role_name = "prometheus-${var.cluster_name}"
+#   loki_iam_role_name = "loki-${var.cluster_name}"
+#   grafana_iam_role_name = "grafana-${var.cluster_name}"
 
-  # helm chart 정보
-  chart_version_loki_distributed = var.chart_version_loki_distributed
-  chart_version_promtail = var.chart_version_promtail
-  chart_version_grafana = var.chart_version_grafana
-  chart_version_metrics_server = var.chart_version_metrics_server
-  chart_version_prometheus = var.chart_version_prometheus
-}
+#   # helm chart 정보
+#   chart_version_loki_distributed = var.chart_version_loki_distributed
+#   chart_version_promtail = var.chart_version_promtail
+#   chart_version_grafana = var.chart_version_grafana
+#   chart_version_metrics_server = var.chart_version_metrics_server
+#   chart_version_prometheus = var.chart_version_prometheus
+# }
