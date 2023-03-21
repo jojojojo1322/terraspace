@@ -36,3 +36,4 @@ terraform.tfvars
 /tmp
 
 *.pem
+topas-tf-eks-dev-config
